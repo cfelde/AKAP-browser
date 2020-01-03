@@ -289,7 +289,13 @@ class Handler {
 
     async hashOf(parentHash, nodeLabel) {
         if (this.hashCheck(parentHash)) {
-            return this.akap.methods.hashOf(parentHash, this.web3.utils.utf8ToHex(nodeLabel)).call();
+            return this.akap.methods
+                .hashOf(parentHash, this.web3.utils.utf8ToHex(nodeLabel))
+                .call()
+                .catch(e => {
+                    console.error(e);
+                    return null;
+                });
         } else {
             return null;
         }
