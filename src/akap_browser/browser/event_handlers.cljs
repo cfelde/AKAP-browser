@@ -18,7 +18,7 @@
   (fn [[handler parent-hash node-label]]
     (let [parent-hash (if (or (nil? parent-hash) (empty? (str/trim parent-hash))) "0x0" (str/trim parent-hash))]
       (p/let [result (p/promise (.hashOf handler parent-hash node-label))]
-        (if result (set! (.. js/window -location -href) (str "/browser/0x" result)))))))
+        (if result (set! (.. js/window -location -href) (str "/browser/0x" result "?p=" parent-hash "&l=" node-label)))))))
 
 (rf/reg-event-fx
   :initialize
