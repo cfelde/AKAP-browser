@@ -7,14 +7,14 @@
 
   <link href="https://use.fontawesome.com/releases/v5.10.1/css/all.css" rel="stylesheet" crossorigin="anonymous">
 
-  <link href="/_css/browser.css" rel="stylesheet" type="text/css">
+  <link href="/_css/details.css" rel="stylesheet" type="text/css">
 
-  <title>AKAP node browser</title>
+  <title>AKAP node details</title>
 </head>
 <body>
 <div id="app">
   <div id="header">
-    <h1>AKAP node browser</h1>
+    <h1>AKAP node details</h1>
   </div>
 </div>
 
@@ -24,14 +24,14 @@
 <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.2.0/dist/web3.min.js" integrity="sha256-WKLoXrA2EzbNYq3Au3vo/5iGkUiglEeuCEZ848zQ/JM=" crossorigin="anonymous"></script>
 
 <script type="text/javascript" src="/_js/blockchain.js"></script>
-<script type="text/javascript" src="/_js/compiled/akap_browser.js"></script>
+<script type="text/javascript" src="/_js/compiled/akap_details.js"></script>
 
 <script>
   async function run() {
-    akap_browser.browser.core.run();
+    akap_browser.details.core.run();
 
     let provider = await getProvider();
-    akap_browser.browser.core.inject_provider(provider);
+    akap_browser.details.core.inject_provider(provider);
   }
 
   if (document.readyState != 'loading') {

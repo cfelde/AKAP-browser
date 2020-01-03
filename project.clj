@@ -32,7 +32,7 @@
                            :open-urls ["http://localhost:3449/browser"]}
 
                 :compiler {:main akap-browser.browser.core
-                           :asset-path "_js/compiled/out_browser"
+                           :asset-path "/_js/compiled/out_browser"
                            :output-to "resources/public/_js/compiled/akap_browser.js"
                            :output-dir "resources/public/_js/compiled/out_browser"
                            :source-map-timestamp true
@@ -41,7 +41,28 @@
                {:id "min-browser"
                 :source-paths ["src"]
                 :compiler {:output-to "resources/public/_js/compiled/akap_browser.js"
+                           :output-dir "resources/public/_js/compiled/out_browser_min"
                            :main akap-browser.browser.core
+                           :optimizations :advanced
+                           :pretty-print false}}
+
+               {:id "dev-details"
+                :source-paths ["src"]
+
+                :figwheel {:on-jsload "akap-browser.details.core/on-js-reload"}
+
+                :compiler {:main akap-browser.details.core
+                           :asset-path "/_js/compiled/out_details"
+                           :output-to "resources/public/_js/compiled/akap_details.js"
+                           :output-dir "resources/public/_js/compiled/out_details"
+                           :source-map-timestamp true
+                           :preloads [devtools.preload]}}
+
+               {:id "min-details"
+                :source-paths ["src"]
+                :compiler {:output-to "resources/public/_js/compiled/akap_details.js"
+                           :output-dir "resources/public/_js/compiled/out_details_min"
+                           :main akap-browser.details.core
                            :optimizations :advanced
                            :pretty-print false}}]}
 

@@ -27,7 +27,7 @@ async function getProvider() {
 
 class Handler {
     // TODO temp
-    address = "0x384779758032D01f57Adb44cD4409D4cE07040c4";
+    address = "0xdDb4Dd12Ea6C92D09FaA4B64FE398F926be23A12";
 
     abi = [
         {
@@ -74,6 +74,63 @@ class Handler {
             ],
             "payable": false,
             "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "constant": true,
+            "inputs": [
+                {
+                    "name": "nodeId",
+                    "type": "uint256"
+                }
+            ],
+            "name": "exists",
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "bool"
+                }
+            ],
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "constant": true,
+            "inputs": [
+                {
+                    "name": "nodeId",
+                    "type": "uint256"
+                }
+            ],
+            "name": "isApprovedOrOwner",
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "bool"
+                }
+            ],
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "constant": true,
+            "inputs": [
+                {
+                    "name": "tokenId",
+                    "type": "uint256"
+                }
+            ],
+            "name": "ownerOf",
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "address"
+                }
+            ],
+            "payable": false,
+            "stateMutability": "view",
             "type": "function"
         },
         {
@@ -275,6 +332,154 @@ class Handler {
             "payable": false,
             "stateMutability": "nonpayable",
             "type": "function"
+        },
+        {
+            "constant": false,
+            "inputs": [
+                {
+                    "name": "to",
+                    "type": "address"
+                },
+                {
+                    "name": "tokenId",
+                    "type": "uint256"
+                }
+            ],
+            "name": "approve",
+            "outputs": [],
+            "payable": false,
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "constant": true,
+            "inputs": [
+                {
+                    "name": "tokenId",
+                    "type": "uint256"
+                }
+            ],
+            "name": "getApproved",
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "address"
+                }
+            ],
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "constant": false,
+            "inputs": [
+                {
+                    "name": "to",
+                    "type": "address"
+                },
+                {
+                    "name": "approved",
+                    "type": "bool"
+                }
+            ],
+            "name": "setApprovalForAll",
+            "outputs": [],
+            "payable": false,
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "constant": true,
+            "inputs": [
+                {
+                    "name": "owner",
+                    "type": "address"
+                },
+                {
+                    "name": "operator",
+                    "type": "address"
+                }
+            ],
+            "name": "isApprovedForAll",
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "bool"
+                }
+            ],
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "constant": false,
+            "inputs": [
+                {
+                    "name": "from",
+                    "type": "address"
+                },
+                {
+                    "name": "to",
+                    "type": "address"
+                },
+                {
+                    "name": "tokenId",
+                    "type": "uint256"
+                }
+            ],
+            "name": "transferFrom",
+            "outputs": [],
+            "payable": false,
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "constant": false,
+            "inputs": [
+                {
+                    "name": "from",
+                    "type": "address"
+                },
+                {
+                    "name": "to",
+                    "type": "address"
+                },
+                {
+                    "name": "tokenId",
+                    "type": "uint256"
+                }
+            ],
+            "name": "safeTransferFrom",
+            "outputs": [],
+            "payable": false,
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "constant": false,
+            "inputs": [
+                {
+                    "name": "from",
+                    "type": "address"
+                },
+                {
+                    "name": "to",
+                    "type": "address"
+                },
+                {
+                    "name": "tokenId",
+                    "type": "uint256"
+                },
+                {
+                    "name": "_data",
+                    "type": "bytes"
+                }
+            ],
+            "name": "safeTransferFrom",
+            "outputs": [],
+            "payable": false,
+            "stateMutability": "nonpayable",
+            "type": "function"
         }
     ];
 
@@ -287,17 +492,64 @@ class Handler {
         return this.web3.utils.isHexStrict(hash);
     }
 
+    catcher(e, d) {
+        console.error(e);
+        return d;
+    }
+
     async hashOf(parentHash, nodeLabel) {
-        if (this.hashCheck(parentHash)) {
-            return this.akap.methods
-                .hashOf(parentHash, this.web3.utils.utf8ToHex(nodeLabel))
-                .call()
-                .catch(e => {
-                    console.error(e);
-                    return null;
-                });
-        } else {
-            return null;
+        if (!this.hashCheck(parentHash)) return null;
+
+        return this.akap.methods
+            .hashOf(parentHash, this.web3.utils.utf8ToHex(nodeLabel))
+            .call()
+            .then(v => this.web3.utils.toHex(v))
+            .catch(e => this.catcher(e, null));
+    }
+
+    async claim(parentHash, nodeLabel) {
+        if (!this.hashCheck(parentHash)) return null;
+
+        let accounts = await this.web3.eth.getAccounts();
+        let avgGasPrice = await this.web3.eth.getGasPrice();
+
+        return this.akap.methods
+            .claim(parentHash, this.web3.utils.utf8ToHex(nodeLabel))
+            .send({
+                from: accounts[0],
+                gasPrice: avgGasPrice,
+                gas: 200000
+            })
+            .then(_ => true)
+            .catch(e => this.catcher(e, false));
+    }
+
+    async loadDetails(nodeHash) {
+        if (!this.hashCheck(nodeHash)) return null;
+
+        let exists = await this.akap.methods.exists(nodeHash).call();
+
+        if (!exists) return {};
+
+        let parentHash = await this.akap.methods.parentOf(nodeHash).call().catch(e => this.catcher(e, null));
+        let ownerAddress = await this.akap.methods.ownerOf(nodeHash).call().catch(e => this.catcher(e, null));
+        let expiry = await this.akap.methods.expiryOf(nodeHash).call().catch(e => this.catcher(e, null));
+        let seeAlso = await this.akap.methods.seeAlso(nodeHash).call().catch(e => this.catcher(e, null));
+        let seeAddress = await this.akap.methods.seeAddress(nodeHash).call().catch(e => this.catcher(e, null));
+        let nodeBody = await this.akap.methods.nodeBody(nodeHash).call().catch(e => this.catcher(e, null));
+        let tokenURI = await this.akap.methods.tokenURI(nodeHash).call().catch(e => this.catcher(e, null));
+        let isApproved = await this.akap.methods.isApprovedOrOwner(nodeHash).call().catch(e => this.catcher(e, false));
+
+        return {
+            "node-hash": nodeHash,
+            "parent-hash": parentHash !== null ? this.web3.utils.toHex(parentHash) : parentHash,
+            "owner-address": ownerAddress,
+            "expiry": expiry,
+            "see-also": seeAlso !== null ? this.web3.utils.toHex(seeAlso) : seeAlso,
+            "see-address": seeAddress,
+            "node-body": nodeBody !== null ? this.web3.utils.toHex(nodeBody) : nodeBody,
+            "token-uri": tokenURI,
+            "is-approved": isApproved
         }
     }
 }
