@@ -517,12 +517,16 @@ class Handler {
         let accounts = await this.web3.eth.getAccounts();
         let avgGasPrice = await this.web3.eth.getGasPrice();
 
+        let gasEstimate = await this.akap.methods
+            .claim(parentHash, this.web3.utils.utf8ToHex(nodeLabel))
+            .estimateGas();
+
         return this.akap.methods
             .claim(parentHash, this.web3.utils.utf8ToHex(nodeLabel))
             .send({
                 from: accounts[0],
                 gasPrice: avgGasPrice,
-                gas: 200000
+                gas: gasEstimate + 30000
             })
             .then(_ => true)
             .catch(e => this.catcher(e, false));
@@ -578,12 +582,16 @@ class Handler {
         let accounts = await this.web3.eth.getAccounts();
         let avgGasPrice = await this.web3.eth.getGasPrice();
 
+        let gasEstimate = await this.akap.methods
+            .setSeeAlso(nodeHash, newValue)
+            .estimateGas();
+
         return this.akap.methods
             .setSeeAlso(nodeHash, newValue)
             .send({
                 from: accounts[0],
                 gasPrice: avgGasPrice,
-                gas: 200000 // TODO
+                gas: gasEstimate + 30000
             })
             .then(_ => true)
             .catch(e => this.catcher(e, false));
@@ -595,12 +603,16 @@ class Handler {
         let accounts = await this.web3.eth.getAccounts();
         let avgGasPrice = await this.web3.eth.getGasPrice();
 
+        let gasEstimate = await this.akap.methods
+            .setSeeAddress(nodeHash, newValue)
+            .estimateGas();
+
         return this.akap.methods
             .setSeeAddress(nodeHash, newValue)
             .send({
                 from: accounts[0],
                 gasPrice: avgGasPrice,
-                gas: 200000 // TODO
+                gas: gasEstimate + 30000
             })
             .then(_ => true)
             .catch(e => this.catcher(e, false));
@@ -610,12 +622,16 @@ class Handler {
         let accounts = await this.web3.eth.getAccounts();
         let avgGasPrice = await this.web3.eth.getGasPrice();
 
+        let gasEstimate = await this.akap.methods
+            .setNodeBody(nodeHash, this.web3.utils.toHex(newValue))
+            .estimateGas();
+
         return this.akap.methods
             .setNodeBody(nodeHash, this.web3.utils.toHex(newValue))
             .send({
                 from: accounts[0],
                 gasPrice: avgGasPrice,
-                gas: 200000 // TODO
+                gas: gasEstimate + 30000
             })
             .then(_ => true)
             .catch(e => this.catcher(e, false));
@@ -625,12 +641,16 @@ class Handler {
         let accounts = await this.web3.eth.getAccounts();
         let avgGasPrice = await this.web3.eth.getGasPrice();
 
+        let gasEstimate = await this.akap.methods
+            .setTokenURI(nodeHash, newValue)
+            .estimateGas();
+
         return this.akap.methods
             .setTokenURI(nodeHash, newValue)
             .send({
                 from: accounts[0],
                 gasPrice: avgGasPrice,
-                gas: 200000 // TODO
+                gas: gasEstimate + 30000
             })
             .then(_ => true)
             .catch(e => this.catcher(e, false));
