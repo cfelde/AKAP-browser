@@ -25,6 +25,13 @@ a, a:visited, a:hover, a:active {
 a:hover {
 }
 
+#home {
+    position: absolute;
+    top: 5px;
+    left: 10px;
+    z-index: 1000;
+}
+
 #app {
     height: 100%;
     min-height: 100%;
