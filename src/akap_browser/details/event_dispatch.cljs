@@ -12,3 +12,13 @@
   [e]
   (rf/dispatch [:claim-node])
   (.preventDefault e))
+
+(defn dispatch-view-parent
+  [e]
+  (rf/dispatch [:view-parent])
+  (.preventDefault e))
+
+(defn dispatch-save-node-attribute
+  [k e]
+  (rf/dispatch [:save-node-attribute k])
+  (.preventDefault e))

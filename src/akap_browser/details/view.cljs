@@ -22,7 +22,7 @@
         see-address (or @(rf/subscribe [:db :node-data :see-address]) "")
         node-body (or @(rf/subscribe [:db :node-data :node-body]) "")
         token-uri (or @(rf/subscribe [:db :node-data :token-uri]) "")
-        is-approved (or @(rf/subscribe [:db :node-data :is-approved]) "")
+        is-approved @(rf/subscribe [:db :node-data :is-approved])
 
         new-see-also @(rf/subscribe [:db :new-node-data :see-also])
         new-see-address @(rf/subscribe [:db :new-node-data :see-address])
@@ -37,7 +37,11 @@
         see-also (or new-see-also see-also)
         see-address (or new-see-address see-address)
         node-body (or new-node-body node-body)
-        token-uri (or new-token-uri token-uri)]
+        token-uri (or new-token-uri token-uri)
+
+        have-calc-node-hash (= @(rf/subscribe [:db :node-hash]) @(rf/subscribe [:db :calc-node-hash]))
+        saving @(rf/subscribe [:db :saving])
+        handler @(rf/subscribe [:db :handler])]
 
     [:div#node-details.container
      [:div.row
@@ -62,7 +66,9 @@
                   :id "parent-hash"
                   :value parent-hash}]]
         [:button {:type "submit"
-                  :class "btn btn-primary mb-2"}
+                  :class "btn btn-primary mb-2"
+                  :disabled saving
+                  :on-click d/dispatch-view-parent}
          "View"]]
 
        [:form.form-inline
@@ -84,10 +90,16 @@
                   :read-only true
                   :id "expiry"
                   :value expiry}]]
-        (when is-approved
+        (when (and is-approved have-calc-node-hash)
           [:button {:type "submit"
-                    :class "btn btn-primary mb-2"}
-           "Reclaim"])]
+                    :class "btn btn-primary mb-2"
+                    :disabled saving
+                    :on-click d/dispatch-claim-node}
+           (if (= :claim saving)
+             [:span {:class "spinner-border spinner-border-sm"
+                     :role "status"
+                     :aria-hidden "true"}]
+             "Reclaim")])]
 
        [:form.form-inline
         [:div.input-group.mb-2.mr-sm-2
@@ -101,8 +113,14 @@
                   :on-change #(d/dispatch-new-node-data :see-also (-> % .-target .-value))}]]
         (when updated-see-also
           [:button {:type "submit"
-                    :class "btn btn-primary mb-2"}
-           "Save"])]
+                    :class "btn btn-primary mb-2"
+                    :disabled saving
+                    :on-click (partial d/dispatch-save-node-attribute :see-also)}
+           (if (= :see-also saving)
+             [:span {:class "spinner-border spinner-border-sm"
+                     :role "status"
+                     :aria-hidden "true"}]
+             "Save")])]
 
        [:form.form-inline
         [:div.input-group.mb-2.mr-sm-2
@@ -116,8 +134,14 @@
                   :on-change #(d/dispatch-new-node-data :see-address (-> % .-target .-value))}]]
         (when updated-see-address
           [:button {:type "submit"
-                    :class "btn btn-primary mb-2"}
-           "Save"])]
+                    :class "btn btn-primary mb-2"
+                    :disabled (or saving (not (.addressCheck handler see-address)))
+                    :on-click (partial d/dispatch-save-node-attribute :see-address)}
+           (if (= :see-address saving)
+             [:span {:class "spinner-border spinner-border-sm"
+                     :role "status"
+                     :aria-hidden "true"}]
+             "Save")])]
 
        [:form.form-inline
         [:div.input-group.mb-2.mr-sm-2
@@ -131,8 +155,14 @@
                   :on-change #(d/dispatch-new-node-data :node-body (-> % .-target .-value))}]]
         (when updated-node-body
           [:button {:type "submit"
-                    :class "btn btn-primary mb-2"}
-           "Save"])]
+                    :class "btn btn-primary mb-2"
+                    :disabled saving
+                    :on-click (partial d/dispatch-save-node-attribute :node-body)}
+           (if (= :node-body saving)
+             [:span {:class "spinner-border spinner-border-sm"
+                     :role "status"
+                     :aria-hidden "true"}]
+             "Save")])]
 
        [:form.form-inline
         [:div.input-group.mb-2.mr-sm-2
@@ -146,8 +176,14 @@
                   :on-change #(d/dispatch-new-node-data :token-uri (-> % .-target .-value))}]]
         (when updated-token-uri
           [:button {:type "submit"
-                    :class "btn btn-primary mb-2"}
-           "Save"])]]]]))
+                    :class "btn btn-primary mb-2"
+                    :disabled saving
+                    :on-click (partial d/dispatch-save-node-attribute :token-uri)}
+           (if (= :token-uri saving)
+             [:span {:class "spinner-border spinner-border-sm"
+                     :role "status"
+                     :aria-hidden "true"}]
+             "Save")])]]]]))
 
 (defn loading-node
   []

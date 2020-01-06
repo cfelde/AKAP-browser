@@ -492,6 +492,10 @@ class Handler {
         return this.web3.utils.isHexStrict(hash);
     }
 
+    addressCheck(address) {
+        return this.web3.utils.isAddress(address)
+    }
+
     catcher(e, d) {
         console.error(e);
         return d;
@@ -527,9 +531,24 @@ class Handler {
     async loadDetails(nodeHash) {
         if (!this.hashCheck(nodeHash)) return null;
 
+        // There's never a node on 0x0, but return default values if requested
+        if (nodeHash === "0x0") return {
+            "node-hash": nodeHash,
+            "parent-hash": nodeHash,
+            "owner-address": nodeHash,
+            "expiry": 8640000000000,
+            "see-also": nodeHash,
+            "see-address": nodeHash,
+            "node-body": null,
+            "token-uri": "https://akap.me",
+            "is-approved": false
+        };
+
         let exists = await this.akap.methods.exists(nodeHash).call();
 
         if (!exists) return {};
+
+        let accounts = await this.web3.eth.getAccounts();
 
         let parentHash = await this.akap.methods.parentOf(nodeHash).call().catch(e => this.catcher(e, null));
         let ownerAddress = await this.akap.methods.ownerOf(nodeHash).call().catch(e => this.catcher(e, null));
@@ -538,7 +557,9 @@ class Handler {
         let seeAddress = await this.akap.methods.seeAddress(nodeHash).call().catch(e => this.catcher(e, null));
         let nodeBody = await this.akap.methods.nodeBody(nodeHash).call().catch(e => this.catcher(e, null));
         let tokenURI = await this.akap.methods.tokenURI(nodeHash).call().catch(e => this.catcher(e, null));
-        let isApproved = await this.akap.methods.isApprovedOrOwner(nodeHash).call().catch(e => this.catcher(e, false));
+        let isApproved = await this.akap.methods.isApprovedOrOwner(nodeHash).call(
+            {from: accounts[0]}
+        ).catch(e => this.catcher(e, false));
 
         return {
             "node-hash": nodeHash,
@@ -551,5 +572,67 @@ class Handler {
             "token-uri": tokenURI,
             "is-approved": isApproved
         }
+    }
+
+    async setSeeAlso(nodeHash, newValue) {
+        let accounts = await this.web3.eth.getAccounts();
+        let avgGasPrice = await this.web3.eth.getGasPrice();
+
+        return this.akap.methods
+            .setSeeAlso(nodeHash, newValue)
+            .send({
+                from: accounts[0],
+                gasPrice: avgGasPrice,
+                gas: 200000 // TODO
+            })
+            .then(_ => true)
+            .catch(e => this.catcher(e, false));
+    }
+
+    async setSeeAddress(nodeHash, newValue) {
+        if (!this.addressCheck(newValue)) return false;
+
+        let accounts = await this.web3.eth.getAccounts();
+        let avgGasPrice = await this.web3.eth.getGasPrice();
+
+        return this.akap.methods
+            .setSeeAddress(nodeHash, newValue)
+            .send({
+                from: accounts[0],
+                gasPrice: avgGasPrice,
+                gas: 200000 // TODO
+            })
+            .then(_ => true)
+            .catch(e => this.catcher(e, false));
+    }
+
+    async setNodeBody(nodeHash, newValue) {
+        let accounts = await this.web3.eth.getAccounts();
+        let avgGasPrice = await this.web3.eth.getGasPrice();
+
+        return this.akap.methods
+            .setNodeBody(nodeHash, this.web3.utils.toHex(newValue))
+            .send({
+                from: accounts[0],
+                gasPrice: avgGasPrice,
+                gas: 200000 // TODO
+            })
+            .then(_ => true)
+            .catch(e => this.catcher(e, false));
+    }
+
+    async setTokenURI(nodeHash, newValue) {
+        let accounts = await this.web3.eth.getAccounts();
+        let avgGasPrice = await this.web3.eth.getGasPrice();
+
+        return this.akap.methods
+            .setTokenURI(nodeHash, newValue)
+            .send({
+                from: accounts[0],
+                gasPrice: avgGasPrice,
+                gas: 200000 // TODO
+            })
+            .then(_ => true)
+            .catch(e => this.catcher(e, false));
     }
 }

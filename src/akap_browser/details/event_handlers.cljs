@@ -31,6 +31,24 @@
       (p/let [result (p/promise (.claim handler parent-hash node-label))]
        (if result (js/window.location.reload))))))
 
+(rf/reg-fx
+  :exec-view-hash
+  (fn [hash]
+    (set! (.. js/window -location -href) (str "/browser/" hash))))
+
+(rf/reg-fx
+  :exec-save-node-attribute
+  (fn [[handler node-hash attribute new-value]]
+    (p/let [result (p/promise
+                     (case attribute
+                       :see-also (.setSeeAlso handler node-hash new-value)
+                       :see-address (.setSeeAddress handler node-hash new-value)
+                       :node-body (.setNodeBody handler node-hash new-value)
+                       :token-uri (.setTokenURI handler node-hash new-value)))]
+      (if result
+        (js/window.location.reload)
+        (rf/dispatch [:reset-saving])))))
+
 (rf/reg-event-fx
   :initialize
   (fn [_ _]
@@ -117,5 +135,22 @@
 (rf/reg-event-fx
   :claim-node
   (fn [{:keys [db]} _]
-    {:db (assoc db :saving true)
+    {:db (assoc db :saving :claim)
      :exec-claim-node [(:handler db) (:parent-hash db) (:node-label db)]}))
+
+(rf/reg-event-fx
+  :view-parent
+  (fn [{:keys [db]} _]
+    {:db db
+     :exec-view-hash (-> db :node-data :parent-hash)}))
+
+(rf/reg-event-fx
+  :save-node-attribute
+  (fn [{:keys [db]} [_ k]]
+    {:db (assoc db :saving k)
+     :exec-save-node-attribute [(:handler db) (:node-hash db) k (-> db :new-node-data k)]}))
+
+(rf/reg-event-fx
+  :reset-saving
+  (fn [{:keys [db]} _]
+    {:db (assoc db :saving false)}))
