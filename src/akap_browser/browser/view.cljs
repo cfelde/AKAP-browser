@@ -71,6 +71,16 @@
                   :on-click d/dispatch-lookup-2}
          "Lookup"]]]]]))
 
+(defn getting-started
+  []
+  [:div#getting-started
+   [:p "To get started, if you don't already have a known node or parent hash, type in a node label and click 'Lookup'.
+        If the label is unused you may then claim the node tied to this label."]
+   [:p "All nodes have a parent, either the special root node or any other node you reference using the parent hash.
+        If you're the owner of a node, you can create child nodes using that node as a parent.
+        Nodes are also " [:a {:href "https://eips.ethereum.org/EIPS/eip-721"} "ERC-721 tokens"] ", which
+        allows you to transfer ownership of nodes using standard interface methods."]])
+
 (defn form-separator
   []
   [:div#form-separator
@@ -110,7 +120,8 @@
      [node-hash-form]
      [form-separator]
      [parent-hash-form]
-     [node-label-form]])
+     [node-label-form]
+     [getting-started]])
   (when @(rf/subscribe [:db :no-provider])
     [no-provider])
   [footer-clearance]
