@@ -21,12 +21,19 @@
   (-> (response/resource-response "details.html" {:root "public"})
       (response/content-type "text/html")))
 
+(defn whitepaper-file
+  []
+  (-> (response/resource-response "whitepaper.html" {:root "public"})
+      (response/content-type "text/html")))
+
 (defroutes app-routes
            (GET "/" [] (index-file))
 
            (GET "/browser" [] (browser-file))
 
            (GET "/browser/*" [] (details-file))
+
+           (GET "/whitepaper" [] (whitepaper-file))
 
            (route/resources "/" {:root "public"})
            (route/not-found "Not Found"))
