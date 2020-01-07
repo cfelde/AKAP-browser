@@ -22,9 +22,6 @@ a, a:visited, a:hover, a:active {
     text-decoration: underline;
 }
 
-a:hover {
-}
-
 #home {
     position: absolute;
     top: 5px;
