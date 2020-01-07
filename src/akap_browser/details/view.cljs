@@ -215,7 +215,8 @@
   [:div
    [:div#node-not-found
     (str "No node on " @(rf/subscribe [:db :node-hash]))]
-   (when (= @(rf/subscribe [:db :node-hash]) @(rf/subscribe [:db :calc-node-hash]))
+   (when (and (= @(rf/subscribe [:db :node-hash]) @(rf/subscribe [:db :calc-node-hash]))
+              (or (= "0x0" @(rf/subscribe [:db :parent-hash])) @(rf/subscribe [:db :is-parent-owner])))
      [:div#claim-node
       [:button {:type "button"
                 :class "btn btn-primary"

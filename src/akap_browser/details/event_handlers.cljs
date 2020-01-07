@@ -8,12 +8,14 @@
 
 (rf/reg-fx
   :exec-load-details
-  (fn [[handler node-hash owner]]
+  (fn [[handler parent-hash node-hash owner]]
     (p/let [result (p/promise (.loadDetails handler node-hash))
+            parent (p/promise (.loadDetails handler parent-hash))
             events (p/promise (.nodeEvents handler (* 1000 60 60 24 30) node-hash owner))]
       (if result
         (do
           (rf/dispatch [:node-hash node-hash])
+          (rf/dispatch [:is-parent-owner (and parent (-> (js->clj parent :keywordize-keys true) :is-approved))])
           (doall (map #(rf/dispatch [:node-data (first %) (second %)]) (js->clj result :keywordize-keys true)))
           (rf/dispatch [:node-events (js->clj events)])
           (rf/dispatch [:loaded true]))
@@ -77,6 +79,7 @@
             :parent-hash (url-parent-hash)
             :node-label (url-node-label)
             :calc-node-hash nil
+            :is-parent-owner false
 
             :node-events nil
 
@@ -101,7 +104,7 @@
     (let [handler (js/Handler. provider)]
       {:db (assoc db :provider provider
                      :handler handler)
-       :exec-load-details [handler (:raw-node-hash db) (-> db :node-data :owner-address)]
+       :exec-load-details [handler (:parent-hash db) (:raw-node-hash db) (-> db :node-data :owner-address)]
        :exec-calc-node-hash [handler (:parent-hash db) (:node-label db)]})))
 
 (rf/reg-event-fx
@@ -118,6 +121,11 @@
   :node-hash
   (fn [{:keys [db]} [_ v]]
     {:db (assoc db :node-hash v)}))
+
+(rf/reg-event-fx
+  :is-parent-owner
+  (fn [{:keys [db]} [_ v]]
+    {:db (assoc db :is-parent-owner v)}))
 
 (rf/reg-event-fx
   :node-events
