@@ -185,6 +185,27 @@
                      :aria-hidden "true"}]
              "Save")])]]]]))
 
+(defn node-events
+  []
+  (letfn [(render-attribute
+            [[key value]]
+            [:div.event-row {:key (gensym)} [:div.event-attribute-key key ":"] [:div.event-attribute-value value]])
+          (render-event
+            [event]
+            [:div.event
+             {:key (gensym)}
+             [:div.event-row [:div.event-attribute-key "Event type:"] [:div.event-attribute-value (nth event 0)]]
+             [:div.event-row [:div.event-attribute-key "Block number:"] [:div.event-attribute-value (nth event 1)]]
+             [:div.event-row [:div.event-attribute-key "Transaction hash:"] [:div.event-attribute-value (nth event 2)]]
+             (map render-attribute (->> event (drop 3) (partition 2)))])]
+    (let [events @(rf/subscribe [:db :node-events])]
+      (if (empty? events)
+        [:div#node-events
+         [:div.separator [:div "No recent events on this node"]]]
+        [:div#node-events
+         [:div.separator [:div "Events on this node within last 30 days"]]
+         (map render-event events)]))))
+
 (defn loading-node
   []
   [:div [:div#node-not-found "Loading.."]])
@@ -241,7 +262,9 @@
 
   (when (and @(rf/subscribe [:db :handler]) @(rf/subscribe [:db :loaded]))
     (if @(rf/subscribe [:db :node-data :node-hash])
-      [node-details]
+      [:div
+       [node-details]
+       [node-events]]
       [node-claim]))
 
   (when @(rf/subscribe [:db :no-provider])

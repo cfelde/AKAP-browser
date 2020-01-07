@@ -1,35 +1,133 @@
-async function getProvider() {
-    let web3Provider;
-
-    // Modern dapp browsers...
-    if (window.ethereum) {
-        web3Provider = window.ethereum;
-
-        try {
-            // Request account access
-            await window.ethereum.enable();
-        } catch (error) {
-            // User denied account access...
-            console.error("User denied account access")
-        }
-    }
-    // Legacy dapp browsers...
-    else if (window.web3) {
-        web3Provider = window.web3.currentProvider;
-    }
-    // If no injected web3 instance is detected, return null..
-    else {
-        web3Provider = null;
-    }
-
-    return web3Provider == null ? null : new Web3(web3Provider);
-}
-
 class Handler {
+    // This is the address of the deployed AKAP contract.
+    // If you want to run the AKAP browser against a local test deploy,
+    // change this value accordingly.
     // TODO temp
-    address = "0xdDb4Dd12Ea6C92D09FaA4B64FE398F926be23A12";
+    address = "0x1608b78A98222B7E75CC18D97DA5988A1fCa92D0";
 
+    // This is the ABI as given by the compiled IAKAP on
+    // https://github.com/cfelde/AKAP/blob/master/contracts/IAKAP.sol
     abi = [
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": true,
+                    "name": "sender",
+                    "type": "address"
+                },
+                {
+                    "indexed": true,
+                    "name": "nodeId",
+                    "type": "uint256"
+                },
+                {
+                    "indexed": true,
+                    "name": "parentId",
+                    "type": "uint256"
+                },
+                {
+                    "indexed": false,
+                    "name": "label",
+                    "type": "bytes"
+                },
+                {
+                    "indexed": false,
+                    "name": "claimCase",
+                    "type": "uint8"
+                }
+            ],
+            "name": "Claim",
+            "type": "event"
+        },
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": true,
+                    "name": "sender",
+                    "type": "address"
+                },
+                {
+                    "indexed": true,
+                    "name": "nodeId",
+                    "type": "uint256"
+                },
+                {
+                    "indexed": false,
+                    "name": "attribute",
+                    "type": "uint8"
+                }
+            ],
+            "name": "AttributeChanged",
+            "type": "event"
+        },
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": true,
+                    "name": "from",
+                    "type": "address"
+                },
+                {
+                    "indexed": true,
+                    "name": "to",
+                    "type": "address"
+                },
+                {
+                    "indexed": true,
+                    "name": "tokenId",
+                    "type": "uint256"
+                }
+            ],
+            "name": "Transfer",
+            "type": "event"
+        },
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": true,
+                    "name": "owner",
+                    "type": "address"
+                },
+                {
+                    "indexed": true,
+                    "name": "approved",
+                    "type": "address"
+                },
+                {
+                    "indexed": true,
+                    "name": "tokenId",
+                    "type": "uint256"
+                }
+            ],
+            "name": "Approval",
+            "type": "event"
+        },
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": true,
+                    "name": "owner",
+                    "type": "address"
+                },
+                {
+                    "indexed": true,
+                    "name": "operator",
+                    "type": "address"
+                },
+                {
+                    "indexed": false,
+                    "name": "approved",
+                    "type": "bool"
+                }
+            ],
+            "name": "ApprovalForAll",
+            "type": "event"
+        },
         {
             "constant": true,
             "inputs": [
@@ -501,6 +599,76 @@ class Handler {
         return d;
     }
 
+    toHex(value) {
+        if (value === null) return null;
+
+        return this.web3.utils.toHex(value);
+    }
+
+    toClaimCase(value) {
+        switch (value) {
+            case "0": return "RECLAIM";
+            case "1": return "NEW";
+            case "2": return "TRANSFER";
+            default: return "UNKNOWN";
+        }
+    }
+
+    toNodeAttribute(value) {
+        switch (value) {
+            case "0": return "EXPIRY";
+            case "1": return "SEE_ALSO";
+            case "2": return "SEE_ADDRESS";
+            case "3": return "NODE_BODY";
+            case "4": return "TOKEN_URI";
+            default: return "UNKNOWN";
+        }
+    }
+
+    parseEvent(event) {
+        switch (event.event) {
+            case "Claim":
+                return [
+                    "Claim", event.blockNumber, event.transactionHash,
+                    "Sender", event.returnValues.sender,
+                    "Node ID", this.toHex(event.returnValues.nodeId),
+                    "Parent ID", this.toHex(event.returnValues.parentId),
+                    "Label", event.returnValues.label,
+                    "Claim case", this.toClaimCase(event.returnValues.claimCase)
+                ];
+            case "AttributeChanged":
+                return [
+                    "AttributeChanged", event.blockNumber, event.transactionHash,
+                    "Sender", event.returnValues.sender,
+                    "Node ID", this.toHex(event.returnValues.nodeId),
+                    "Attribute", this.toNodeAttribute(event.returnValues.attribute)
+                ];
+            case "Transfer":
+                return [
+                    "Transfer", event.blockNumber, event.transactionHash,
+                    "From", event.returnValues.from,
+                    "To", event.returnValues.to,
+                    "Node ID", this.toHex(event.returnValues.tokenId)
+                ];
+            case "Approval":
+                return [
+                    "Approval", event.blockNumber, event.transactionHash,
+                    "Owner", event.returnValues.owner,
+                    "Approved", event.returnValues.approved,
+                    "Node ID", this.toHex(event.returnValues.tokenId)
+                ];
+            case "ApprovalForAll":
+                return [
+                    "ApprovalForAll", event.blockNumber, event.transactionHash,
+                    "Owner", event.returnValues.owner,
+                    "Operator", event.returnValues.operator,
+                    "Approved", event.returnValues.approved
+                ];
+            default:
+                return null;
+        }
+    }
+
     async hashOf(parentHash, nodeLabel) {
         if (!this.hashCheck(parentHash)) return null;
 
@@ -654,5 +822,30 @@ class Handler {
             })
             .then(_ => true)
             .catch(e => this.catcher(e, false));
+    }
+
+    async nodeEvents(millisBack, nodeHash, owner) {
+        let lastBlockNumber = await this.web3.eth.getBlockNumber();
+        let lastTimestamp = (await this.web3.eth.getBlock(lastBlockNumber)).timestamp;
+
+        let firstBlockNumber = lastBlockNumber;
+        let firstTimestamp;
+
+        do {
+            firstBlockNumber = Math.max(0, firstBlockNumber - 1920);
+            firstTimestamp = (await this.web3.eth.getBlock(firstBlockNumber)).timestamp;
+        } while ((lastTimestamp - firstTimestamp) * 1000 < millisBack && firstBlockNumber > 0);
+
+        let events1 = await this.akap.getPastEvents("Claim", {filter: {nodeId: nodeHash}, fromBlock: firstBlockNumber, toBlock: lastBlockNumber});
+        let events2 = await this.akap.getPastEvents("AttributeChanged", {filter: {nodeId: nodeHash}, fromBlock: firstBlockNumber, toBlock: lastBlockNumber});
+        let events3 = await this.akap.getPastEvents("Transfer", {filter: {tokenId: nodeHash}, fromBlock: firstBlockNumber, toBlock: lastBlockNumber});
+        let events4 = await this.akap.getPastEvents("Approval", {filter: {tokenId: nodeHash}, fromBlock: firstBlockNumber, toBlock: lastBlockNumber});
+        let events5 = await this.akap.getPastEvents("ApprovalForAll", {filter: {owner: owner}, fromBlock: firstBlockNumber, toBlock: lastBlockNumber});
+
+        let events = [].concat(events1, events2, events3, events4, events5);
+
+        events.sort((a, b) => b.blockNumber - a.blockNumber);
+
+        return await Promise.all(events.map(e => this.parseEvent(e)).filter(e => e !== null));
     }
 }

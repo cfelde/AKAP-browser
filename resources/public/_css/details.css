@@ -22,9 +22,6 @@ a, a:visited, a:hover, a:active {
     text-decoration: underline;
 }
 
-a:hover {
-}
-
 #home {
     position: absolute;
     top: 5px;
@@ -76,6 +73,69 @@ a:hover {
 
 #node-details .input-group-text {
     width: 140px;
+}
+
+.separator div {
+    position: relative;
+    font-size: x-large;
+    z-index: 1;
+    overflow: hidden;
+    text-align: center;
+}
+
+.separator {
+    padding-top: 40px;
+    color: #aaa;
+}
+
+.separator div:before, .separator div:after {
+    position: absolute;
+    top: 51%;
+    overflow: hidden;
+    width: 40%;
+    height: 1px;
+    margin-left: 10px;
+    content: '\a0';
+    background-color: #aaa;
+}
+
+.separator div:before {
+    margin-left: calc(-40% - 10px);
+    text-align: right;
+}
+
+#node-events {
+    max-width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#node-events .event {
+    display: table;
+    width: 800px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    border-bottom-color: #aaa;
+    border-bottom-style: dashed;
+    border-bottom-width: 1px;
+}
+
+#node-events .event-row {
+    display: table-row;
+}
+
+#node-events .event-attribute-key {
+    display: table-cell;
+    width: 200px;
+    padding-right: 10px;
+    font-weight: bold;
+}
+
+#node-events .event-attribute-value {
+    display: table-cell;
+    word-break: break-all;
 }
 
 #no-provider {
