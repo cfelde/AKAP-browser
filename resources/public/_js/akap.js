@@ -2,8 +2,7 @@ class Handler {
     // This is the address of the deployed AKAP contract.
     // If you want to run the AKAP browser against a local test deploy,
     // change this value accordingly.
-    // TODO temp
-    address = "0x1608b78A98222B7E75CC18D97DA5988A1fCa92D0";
+    address = "0xaacCAAB0E85b1EfCEcdBA88F4399fa6CAb402349";
 
     // This is the ABI as given by the compiled IAKAP on
     // https://github.com/cfelde/AKAP/blob/master/contracts/IAKAP.sol
@@ -13,92 +12,19 @@ class Handler {
             "inputs": [
                 {
                     "indexed": true,
-                    "name": "sender",
-                    "type": "address"
-                },
-                {
-                    "indexed": true,
-                    "name": "nodeId",
-                    "type": "uint256"
-                },
-                {
-                    "indexed": true,
-                    "name": "parentId",
-                    "type": "uint256"
-                },
-                {
-                    "indexed": false,
-                    "name": "label",
-                    "type": "bytes"
-                },
-                {
-                    "indexed": false,
-                    "name": "claimCase",
-                    "type": "uint8"
-                }
-            ],
-            "name": "Claim",
-            "type": "event"
-        },
-        {
-            "anonymous": false,
-            "inputs": [
-                {
-                    "indexed": true,
-                    "name": "sender",
-                    "type": "address"
-                },
-                {
-                    "indexed": true,
-                    "name": "nodeId",
-                    "type": "uint256"
-                },
-                {
-                    "indexed": false,
-                    "name": "attribute",
-                    "type": "uint8"
-                }
-            ],
-            "name": "AttributeChanged",
-            "type": "event"
-        },
-        {
-            "anonymous": false,
-            "inputs": [
-                {
-                    "indexed": true,
-                    "name": "from",
-                    "type": "address"
-                },
-                {
-                    "indexed": true,
-                    "name": "to",
-                    "type": "address"
-                },
-                {
-                    "indexed": true,
-                    "name": "tokenId",
-                    "type": "uint256"
-                }
-            ],
-            "name": "Transfer",
-            "type": "event"
-        },
-        {
-            "anonymous": false,
-            "inputs": [
-                {
-                    "indexed": true,
+                    "internalType": "address",
                     "name": "owner",
                     "type": "address"
                 },
                 {
                     "indexed": true,
+                    "internalType": "address",
                     "name": "approved",
                     "type": "address"
                 },
                 {
                     "indexed": true,
+                    "internalType": "uint256",
                     "name": "tokenId",
                     "type": "uint256"
                 }
@@ -111,16 +37,19 @@ class Handler {
             "inputs": [
                 {
                     "indexed": true,
+                    "internalType": "address",
                     "name": "owner",
                     "type": "address"
                 },
                 {
                     "indexed": true,
+                    "internalType": "address",
                     "name": "operator",
                     "type": "address"
                 },
                 {
                     "indexed": false,
+                    "internalType": "bool",
                     "name": "approved",
                     "type": "bool"
                 }
@@ -129,13 +58,102 @@ class Handler {
             "type": "event"
         },
         {
-            "constant": true,
+            "anonymous": false,
             "inputs": [
                 {
+                    "indexed": true,
+                    "internalType": "address",
+                    "name": "sender",
+                    "type": "address"
+                },
+                {
+                    "indexed": true,
+                    "internalType": "uint256",
+                    "name": "nodeId",
+                    "type": "uint256"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "enum IAKAP.NodeAttribute",
+                    "name": "attribute",
+                    "type": "uint8"
+                }
+            ],
+            "name": "AttributeChanged",
+            "type": "event"
+        },
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": true,
+                    "internalType": "address",
+                    "name": "sender",
+                    "type": "address"
+                },
+                {
+                    "indexed": true,
+                    "internalType": "uint256",
+                    "name": "nodeId",
+                    "type": "uint256"
+                },
+                {
+                    "indexed": true,
+                    "internalType": "uint256",
                     "name": "parentId",
                     "type": "uint256"
                 },
                 {
+                    "indexed": false,
+                    "internalType": "bytes",
+                    "name": "label",
+                    "type": "bytes"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "enum IAKAP.ClaimCase",
+                    "name": "claimCase",
+                    "type": "uint8"
+                }
+            ],
+            "name": "Claim",
+            "type": "event"
+        },
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": true,
+                    "internalType": "address",
+                    "name": "from",
+                    "type": "address"
+                },
+                {
+                    "indexed": true,
+                    "internalType": "address",
+                    "name": "to",
+                    "type": "address"
+                },
+                {
+                    "indexed": true,
+                    "internalType": "uint256",
+                    "name": "tokenId",
+                    "type": "uint256"
+                }
+            ],
+            "name": "Transfer",
+            "type": "event"
+        },
+        {
+            "constant": true,
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "parentId",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "bytes",
                     "name": "label",
                     "type": "bytes"
                 }
@@ -143,6 +161,7 @@ class Handler {
             "name": "hashOf",
             "outputs": [
                 {
+                    "internalType": "uint256",
                     "name": "id",
                     "type": "uint256"
                 }
@@ -155,10 +174,12 @@ class Handler {
             "constant": false,
             "inputs": [
                 {
+                    "internalType": "uint256",
                     "name": "parentId",
                     "type": "uint256"
                 },
                 {
+                    "internalType": "bytes",
                     "name": "label",
                     "type": "bytes"
                 }
@@ -166,6 +187,7 @@ class Handler {
             "name": "claim",
             "outputs": [
                 {
+                    "internalType": "uint256",
                     "name": "status",
                     "type": "uint256"
                 }
@@ -178,6 +200,7 @@ class Handler {
             "constant": true,
             "inputs": [
                 {
+                    "internalType": "uint256",
                     "name": "nodeId",
                     "type": "uint256"
                 }
@@ -185,6 +208,7 @@ class Handler {
             "name": "exists",
             "outputs": [
                 {
+                    "internalType": "bool",
                     "name": "",
                     "type": "bool"
                 }
@@ -197,6 +221,7 @@ class Handler {
             "constant": true,
             "inputs": [
                 {
+                    "internalType": "uint256",
                     "name": "nodeId",
                     "type": "uint256"
                 }
@@ -204,6 +229,7 @@ class Handler {
             "name": "isApprovedOrOwner",
             "outputs": [
                 {
+                    "internalType": "bool",
                     "name": "",
                     "type": "bool"
                 }
@@ -216,6 +242,7 @@ class Handler {
             "constant": true,
             "inputs": [
                 {
+                    "internalType": "uint256",
                     "name": "tokenId",
                     "type": "uint256"
                 }
@@ -223,6 +250,7 @@ class Handler {
             "name": "ownerOf",
             "outputs": [
                 {
+                    "internalType": "address",
                     "name": "",
                     "type": "address"
                 }
@@ -235,6 +263,7 @@ class Handler {
             "constant": true,
             "inputs": [
                 {
+                    "internalType": "uint256",
                     "name": "nodeId",
                     "type": "uint256"
                 }
@@ -242,6 +271,7 @@ class Handler {
             "name": "parentOf",
             "outputs": [
                 {
+                    "internalType": "uint256",
                     "name": "",
                     "type": "uint256"
                 }
@@ -254,6 +284,7 @@ class Handler {
             "constant": true,
             "inputs": [
                 {
+                    "internalType": "uint256",
                     "name": "nodeId",
                     "type": "uint256"
                 }
@@ -261,6 +292,7 @@ class Handler {
             "name": "expiryOf",
             "outputs": [
                 {
+                    "internalType": "uint256",
                     "name": "",
                     "type": "uint256"
                 }
@@ -273,6 +305,7 @@ class Handler {
             "constant": true,
             "inputs": [
                 {
+                    "internalType": "uint256",
                     "name": "nodeId",
                     "type": "uint256"
                 }
@@ -280,6 +313,7 @@ class Handler {
             "name": "seeAlso",
             "outputs": [
                 {
+                    "internalType": "uint256",
                     "name": "",
                     "type": "uint256"
                 }
@@ -292,6 +326,7 @@ class Handler {
             "constant": true,
             "inputs": [
                 {
+                    "internalType": "uint256",
                     "name": "nodeId",
                     "type": "uint256"
                 }
@@ -299,6 +334,7 @@ class Handler {
             "name": "seeAddress",
             "outputs": [
                 {
+                    "internalType": "address",
                     "name": "",
                     "type": "address"
                 }
@@ -311,6 +347,7 @@ class Handler {
             "constant": true,
             "inputs": [
                 {
+                    "internalType": "uint256",
                     "name": "nodeId",
                     "type": "uint256"
                 }
@@ -318,6 +355,7 @@ class Handler {
             "name": "nodeBody",
             "outputs": [
                 {
+                    "internalType": "bytes",
                     "name": "",
                     "type": "bytes"
                 }
@@ -330,6 +368,7 @@ class Handler {
             "constant": true,
             "inputs": [
                 {
+                    "internalType": "uint256",
                     "name": "tokenId",
                     "type": "uint256"
                 }
@@ -337,6 +376,7 @@ class Handler {
             "name": "tokenURI",
             "outputs": [
                 {
+                    "internalType": "string",
                     "name": "",
                     "type": "string"
                 }
@@ -349,6 +389,7 @@ class Handler {
             "constant": false,
             "inputs": [
                 {
+                    "internalType": "uint256",
                     "name": "nodeId",
                     "type": "uint256"
                 }
@@ -363,10 +404,12 @@ class Handler {
             "constant": false,
             "inputs": [
                 {
+                    "internalType": "uint256",
                     "name": "nodeId",
                     "type": "uint256"
                 },
                 {
+                    "internalType": "uint256",
                     "name": "value",
                     "type": "uint256"
                 }
@@ -381,10 +424,12 @@ class Handler {
             "constant": false,
             "inputs": [
                 {
+                    "internalType": "uint256",
                     "name": "nodeId",
                     "type": "uint256"
                 },
                 {
+                    "internalType": "address",
                     "name": "value",
                     "type": "address"
                 }
@@ -399,10 +444,12 @@ class Handler {
             "constant": false,
             "inputs": [
                 {
+                    "internalType": "uint256",
                     "name": "nodeId",
                     "type": "uint256"
                 },
                 {
+                    "internalType": "bytes",
                     "name": "value",
                     "type": "bytes"
                 }
@@ -417,10 +464,12 @@ class Handler {
             "constant": false,
             "inputs": [
                 {
+                    "internalType": "uint256",
                     "name": "nodeId",
                     "type": "uint256"
                 },
                 {
+                    "internalType": "string",
                     "name": "uri",
                     "type": "string"
                 }
@@ -435,10 +484,12 @@ class Handler {
             "constant": false,
             "inputs": [
                 {
+                    "internalType": "address",
                     "name": "to",
                     "type": "address"
                 },
                 {
+                    "internalType": "uint256",
                     "name": "tokenId",
                     "type": "uint256"
                 }
@@ -453,6 +504,7 @@ class Handler {
             "constant": true,
             "inputs": [
                 {
+                    "internalType": "uint256",
                     "name": "tokenId",
                     "type": "uint256"
                 }
@@ -460,6 +512,7 @@ class Handler {
             "name": "getApproved",
             "outputs": [
                 {
+                    "internalType": "address",
                     "name": "",
                     "type": "address"
                 }
@@ -472,10 +525,12 @@ class Handler {
             "constant": false,
             "inputs": [
                 {
+                    "internalType": "address",
                     "name": "to",
                     "type": "address"
                 },
                 {
+                    "internalType": "bool",
                     "name": "approved",
                     "type": "bool"
                 }
@@ -490,10 +545,12 @@ class Handler {
             "constant": true,
             "inputs": [
                 {
+                    "internalType": "address",
                     "name": "owner",
                     "type": "address"
                 },
                 {
+                    "internalType": "address",
                     "name": "operator",
                     "type": "address"
                 }
@@ -501,6 +558,7 @@ class Handler {
             "name": "isApprovedForAll",
             "outputs": [
                 {
+                    "internalType": "bool",
                     "name": "",
                     "type": "bool"
                 }
@@ -513,14 +571,17 @@ class Handler {
             "constant": false,
             "inputs": [
                 {
+                    "internalType": "address",
                     "name": "from",
                     "type": "address"
                 },
                 {
+                    "internalType": "address",
                     "name": "to",
                     "type": "address"
                 },
                 {
+                    "internalType": "uint256",
                     "name": "tokenId",
                     "type": "uint256"
                 }
@@ -535,14 +596,17 @@ class Handler {
             "constant": false,
             "inputs": [
                 {
+                    "internalType": "address",
                     "name": "from",
                     "type": "address"
                 },
                 {
+                    "internalType": "address",
                     "name": "to",
                     "type": "address"
                 },
                 {
+                    "internalType": "uint256",
                     "name": "tokenId",
                     "type": "uint256"
                 }
@@ -557,18 +621,22 @@ class Handler {
             "constant": false,
             "inputs": [
                 {
+                    "internalType": "address",
                     "name": "from",
                     "type": "address"
                 },
                 {
+                    "internalType": "address",
                     "name": "to",
                     "type": "address"
                 },
                 {
+                    "internalType": "uint256",
                     "name": "tokenId",
                     "type": "uint256"
                 },
                 {
+                    "internalType": "bytes",
                     "name": "_data",
                     "type": "bytes"
                 }
@@ -680,14 +748,19 @@ class Handler {
     }
 
     async claim(parentHash, nodeLabel) {
+        console.log("1");
         if (!this.hashCheck(parentHash)) return null;
+        console.log("2");
 
         let accounts = await this.web3.eth.getAccounts();
         let avgGasPrice = await this.web3.eth.getGasPrice();
 
-        let gasEstimate = await this.akap.methods
-            .claim(parentHash, this.web3.utils.utf8ToHex(nodeLabel))
-            .estimateGas();
+        // let gasEstimate = await this.akap.methods
+        //     .claim(parentHash, this.web3.utils.utf8ToHex(nodeLabel))
+        //     .estimateGas();
+        let gasEstimate = 4000000;
+
+        console.log("gasEstimate: " + gasEstimate)
 
         return this.akap.methods
             .claim(parentHash, this.web3.utils.utf8ToHex(nodeLabel))
