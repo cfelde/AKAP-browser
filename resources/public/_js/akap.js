@@ -748,19 +748,14 @@ class Handler {
     }
 
     async claim(parentHash, nodeLabel) {
-        console.log("1");
         if (!this.hashCheck(parentHash)) return null;
-        console.log("2");
 
         let accounts = await this.web3.eth.getAccounts();
         let avgGasPrice = await this.web3.eth.getGasPrice();
 
-        // let gasEstimate = await this.akap.methods
-        //     .claim(parentHash, this.web3.utils.utf8ToHex(nodeLabel))
-        //     .estimateGas();
-        let gasEstimate = 4000000;
-
-        console.log("gasEstimate: " + gasEstimate)
+        let gasEstimate = await this.akap.methods
+            .claim(parentHash, this.web3.utils.utf8ToHex(nodeLabel))
+            .estimateGas();
 
         return this.akap.methods
             .claim(parentHash, this.web3.utils.utf8ToHex(nodeLabel))
