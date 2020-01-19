@@ -20,7 +20,8 @@
                  [compojure "1.6.1"]]
 
   :plugins [[lein-figwheel "0.5.19"]
-            [lein-cljsbuild "1.1.7" :exclusions [[org.clojure/clojure]]]]
+            [lein-cljsbuild "1.1.7" :exclusions [[org.clojure/clojure]]]
+            [lein-ring "0.12.5"]]
 
   :source-paths ["src"]
 
@@ -41,10 +42,11 @@
                {:id "min-browser"
                 :source-paths ["src"]
                 :compiler {:output-to "resources/public/_js/compiled/akap_browser.js"
-                           :output-dir "resources/public/_js/compiled/out_browser_min"
+                           :output-dir "target/out_browser_min"
                            :main akap-browser.browser.core
                            :optimizations :advanced
-                           :pretty-print false}}
+                           :pretty-print false
+                           :externs ["externs/externs.js"]}}
 
                {:id "dev-details"
                 :source-paths ["src"]
@@ -61,12 +63,15 @@
                {:id "min-details"
                 :source-paths ["src"]
                 :compiler {:output-to "resources/public/_js/compiled/akap_details.js"
-                           :output-dir "resources/public/_js/compiled/out_details_min"
+                           :output-dir "target/out_details_min"
                            :main akap-browser.details.core
                            :optimizations :advanced
-                           :pretty-print false}}]}
+                           :pretty-print false
+                           :externs ["externs/externs.js"]}}]}
 
-  :figwheel {:css-dirs ["resources/public/_css"] ;; watch and update CSS
+  :ring {:handler akap-browser.server.handler/dev-app}
+
+  :figwheel {:css-dirs ["resources/public/_css"]
              :ring-handler akap-browser.server.handler/dev-app}
 
   :profiles {:dev {:dependencies [[binaryage/devtools "0.9.10"]
