@@ -755,14 +755,15 @@ class Handler {
 
         let gasEstimate = await this.akap.methods
             .claim(parentHash, this.web3.utils.utf8ToHex(nodeLabel))
-            .estimateGas();
+            .estimateGas()
+            .catch(e => 1000000);
 
         return this.akap.methods
             .claim(parentHash, this.web3.utils.utf8ToHex(nodeLabel))
             .send({
                 from: accounts[0],
                 gasPrice: avgGasPrice,
-                gas: gasEstimate + 30000
+                gas: Math.min(gasEstimate + 30000, 1000000)
             })
             .then(_ => true)
             .catch(e => this.catcher(e, false));
