@@ -60,3 +60,10 @@ a, a:visited, a:hover, a:active {
     text-align: center;
     overflow: auto;
 }
+
+#github {
+    z-index: 1000;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
