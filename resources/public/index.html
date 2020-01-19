@@ -12,44 +12,49 @@
     <title>AKA protocol, the LDAP of Ethereum</title>
 </head>
 <body>
-<div>
+<div id="root">
     <div id="body">
-        <h1>AKA protocol, the LDAP of Ethereum</h1>
-        <p>
-            The AKA protocol and AKAP registry smart contract, deployed on Ethereum networks, provide features similar to LDAP but for smart contracts. Details provided in our <a href="/whitepaper">whitepaper</a>.
-        </p>
-        <p>
-            Leverage AKAP best practice to:
-        </p>
-        <ul>
-            <li>Ensuring correct contract address references across any number of smart contracts</li>
-            <li>Sharing configuration items among several contracts without needing to duplicate storage</li>
-            <li>Atomically updating reference data with a single transaction, avoiding slow change propagation</li>
-            <li>Protect yourself from accidentally forgetting to update a reference when leveraging the registry</li>
-        </ul>
-        <p>
-            All sorts of dapps can benefit from AKAP, with a few example apps listed below..
-        </p>
-        <h1>Browse the network</h1>
-        <p>
-            The AKAP system consists of nodes placed in a directed acyclic graph, allowing for a full range of
-            simple to complex setups, depending on your needs. Use the <a href="/browser">AKAP browser</a> to navigate, claim, and manage
-            these AKAP nodes.
-        </p>
-        <p>
-            All AKAP nodes represent tokens, and can be managed, owned and transferred according to the <a href="https://eips.ethereum.org/EIPS/eip-721">ERC-721</a> standard.
-        </p>
-        <h1>Applications using AKAP</h1>
-        <p>
-            TODO: List of sample apps
-        </p>
-        <p>
-            TODO: Contract address
-        </p>
-    </div>
-    <div id="footer-clearance"></div>
-    <div id="footer">
-        <a href="https://akap.me">AKA protocol</a>, the LDAP of <a href="https://www.ethereum.org">Ethereum</a>, is <a href="https://github.com/cfelde/akap">open source software</a>. Copyright 2020, all rights reserved.
+        <div id="content">
+            <h1>AKA protocol, the LDAP of Ethereum</h1>
+            <p>
+                The AKA protocol and AKAP registry smart contract, deployed on Ethereum networks, provide features similar to LDAP but for smart contracts. Details provided in our <a href="/whitepaper">whitepaper</a>.
+            </p>
+            <p>
+                Leverage AKAP best practice to:
+            </p>
+            <ul>
+                <li>Ensuring correct contract address references across any number of smart contracts</li>
+                <li>Sharing configuration items among several contracts without needing to duplicate storage</li>
+                <li>Atomically updating reference data with a single transaction, avoiding slow change propagation</li>
+                <li>Protect yourself from accidentally forgetting to update a reference when leveraging the registry</li>
+            </ul>
+            <p>
+                Any dapp or smart contract that need to hold configuration, use external references or look up data can benefit from using AKAP.
+            </p>
+            <h1>Browse the network</h1>
+            <p>
+                The AKAP system consists of nodes placed in a directed acyclic graph, allowing for a full range of
+                simple to complex setups, depending on your needs. Use the <a href="/browser">AKAP browser</a> to navigate, claim, and manage
+                these AKAP nodes.
+            </p>
+            <p>
+                All AKAP nodes represent tokens, and can be managed, owned and transferred according to the <a href="https://eips.ethereum.org/EIPS/eip-721">ERC-721</a> standard.
+            </p>
+            <h1>Getting started</h1>
+            <p>
+                The AKA Protocol Registry Contract is deployed and ready for use.
+                You can find the contract on address 0xaacCAAB0E85b1EfCEcdBA88F4399fa6CAb402349 as is available on
+                <a href="https://goerli.etherscan.io/address/0xaaccaab0e85b1efcecdba88f4399fa6cab402349">Goerli</a>,
+                <a href="https://rinkeby.etherscan.io/address/0xaaccaab0e85b1efcecdba88f4399fa6cab402349">Rinkeby</a>,
+                <a href="https://kovan.etherscan.io/address/0xaaccaab0e85b1efcecdba88f4399fa6cab402349">Kovan</a>,
+                <a href="https://ropsten.etherscan.io/address/0xaaccaab0e85b1efcecdba88f4399fa6cab402349">Ropsten</a>, and
+                <a href="https://etherscan.io/address/0xaaccaab0e85b1efcecdba88f4399fa6cab402349">Mainnet</a>.
+            </p>
+        </div>
+        <div id="footer-clearance"></div>
+        <div id="footer">
+            <a href="https://akap.me">AKA protocol</a>, the LDAP of <a href="https://www.ethereum.org">Ethereum</a>, is <a href="https://github.com/cfelde/akap">open source software</a>. Copyright 2020, all rights reserved.
+        </div>
     </div>
 </div>
 

@@ -29,7 +29,7 @@
                 :source-paths ["src"]
 
                 :figwheel {:on-jsload "akap-browser.browser.core/on-js-reload"
-                           :open-urls ["http://localhost:3449/browser"]}
+                           :open-urls ["http://localhost:3449/"]}
 
                 :compiler {:main akap-browser.browser.core
                            :asset-path "/_js/compiled/out_browser"
